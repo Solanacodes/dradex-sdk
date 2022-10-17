@@ -67,10 +67,13 @@ export class InstructionSet {
     return this.instructions[0];
   }
 
-  exec({ signers, ...options }: ConfirmOptions & { signers?: (Signer | undefined)[] } = {}) {
+  exec({ signers, ...options }: ConfirmOptions & { signers?: Signer[] } = {}) {
     if (!this.provider) {
       throw new Error("provider not available");
     }
-    return this.provider.send(this.tx(), signers, options);
+    if (!signers) {
+      throw new Error("signers not available");
+    }
+    return this.provider.send?.(this.tx(), signers, options);
   }
 }

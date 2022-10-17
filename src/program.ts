@@ -55,8 +55,13 @@ export class DexProgram extends Program<Dex> {
 
   loadDexMetadata(dexMetadata: DexMetadata) {
     const [masterAddress, masterBump] = dexMetadata.master;
+
+    if (!this.provider.publicKey) {
+      throw new Error("provider public key is not set");
+    }
+
     this.systemAccounts = {
-      signer: this.provider.wallet.publicKey,
+      signer: this.provider.publicKey,
       master: translateAddress(masterAddress),
       rent: SYSVAR_RENT_PUBKEY,
       clock: SYSVAR_CLOCK_PUBKEY,

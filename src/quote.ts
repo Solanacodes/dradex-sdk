@@ -2,7 +2,7 @@ import { Order, OrderBook } from "@dradex/idl";
 import { BN } from "@project-serum/anchor";
 import { Mint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
-import Decimal from "decimal.js-light";
+import Decimal from "decimal.js";
 import JSBI from "jsbi";
 
 import { FEE_BPS_BASE, MarketFormatting, MarketState, Side } from "./core";
@@ -117,7 +117,7 @@ export class QuoteCalculator {
 
   private toProgramAmount(amount: string | number, token: { decimals?: number }): JSBI {
     const power = new Decimal(10).toPower(token.decimals ?? 9);
-    return JSBI.BigInt(new Decimal(amount).mul(power).toint().toString());
+    return JSBI.BigInt(new Decimal(amount).mul(power).floor().toString());
   }
 
   private toUiPrice(lotPrice: BN) {
